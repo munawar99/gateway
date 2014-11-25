@@ -50,21 +50,23 @@ public class MessageGateway implements Gateway {
 			inputStream.close();
 			threadCount = Integer.parseInt(properties.getProperty("gateway.threads"));
 			queueSize = Integer.parseInt(properties.getProperty("gateway.queuesize"));
-			blockingQueue = new PriorityBlockingQueue<Runnable>(queueSize, this.comparator);
-			
-			// An abstraction for creating and running tasks in threads.
-	        executor = new ThreadPoolExecutor(threadCount, threadCount, 5000,
-	        		TimeUnit.MILLISECONDS, blockingQueue);
-			
-			if (logger.isDebugEnabled()) {
-				logger.debug("Gateway has " + threadCount + " threads and queue size " + queueSize);
-			}
 		} catch (FileNotFoundException e) {
-			logger.error("The properties file was not found");
-			e.printStackTrace();
+			String msg = "The configuration file was not found. Check the log file for details. ";
+			System.out.println(msg);
+			logger.error(msg + e);
 		} catch (IOException e) {
-			logger.error("The properties file could not be read");
-			e.printStackTrace();
+			String msg = "The configuration file could not be read. Check the log file for details. ";
+			System.out.println(msg);
+			logger.error(msg + e);
+		}
+		
+		// Abstractions for queueing and running tasks in threads.
+		blockingQueue = new PriorityBlockingQueue<Runnable>(queueSize, this.comparator);
+        executor = new ThreadPoolExecutor(threadCount, threadCount, 5000,
+        		TimeUnit.MILLISECONDS, blockingQueue);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("The gateway has " + threadCount + " threads and queue size " + queueSize);
 		}
 	}
 	
