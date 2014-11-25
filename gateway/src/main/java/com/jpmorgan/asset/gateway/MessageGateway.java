@@ -1,29 +1,18 @@
 package com.jpmorgan.asset.gateway;
 
 import java.lang.Integer;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import org.apache.log4j.Logger;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.log4j.Logger;
 
 /**
  * @author Munawar Akbar
@@ -32,7 +21,7 @@ public class MessageGateway implements Gateway {
 	
 	private static Logger logger = Logger.getLogger(MessageGateway.class);
 	private Comparator comparator = new MessageComparator();
-	private BlockingQueue<Runnable> blockingQueue;
+	private PriorityBlockingQueue<Runnable> blockingQueue;
 	private ThreadPoolExecutor executor;
 	private List<String> groupReceivedSequenceList = new ArrayList<String>();
 	private AtomicInteger atomicInteger = new AtomicInteger();
@@ -50,11 +39,11 @@ public class MessageGateway implements Gateway {
 			threadCount = Integer.parseInt(properties.getProperty("gateway.threads"));
 			queueSize = Integer.parseInt(properties.getProperty("gateway.queuesize"));
 		} catch (FileNotFoundException e) {
-			String msg = "The configuration file was not found. Check the log file for details. ";
+			String msg = "The configuration file was not found. Ask the helpdesk for support. ";
 			System.out.println(msg);
 			logger.error(msg + e);
 		} catch (IOException e) {
-			String msg = "The configuration file could not be read. Check the log file for details. ";
+			String msg = "The configuration file could not be read. Ask the helpdesk for support. ";
 			System.out.println(msg);
 			logger.error(msg + e);
 		}
