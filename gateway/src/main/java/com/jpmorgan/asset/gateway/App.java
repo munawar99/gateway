@@ -5,7 +5,6 @@ import org.apache.log4j.Logger;
 /**
  * @author Munawar Akbar
  */
-//@RunWith(SpringJUnit4ClassRunner.class)
 public class App {
 
 	private static Logger logger = Logger.getLogger(App.class);
@@ -60,7 +59,9 @@ public class App {
 			logger.info("Sending group 2 message EXIM ...");
 			gateway.send(message);
 		} catch (Exception e) {
-			e.printStackTrace();
+			String msg = "A problem occurred. Ask the helpdesk for support. ";
+			System.out.println(msg);
+			logger.error(msg + e);
 		}
 	}
 
