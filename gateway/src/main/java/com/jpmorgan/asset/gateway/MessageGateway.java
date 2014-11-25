@@ -39,13 +39,12 @@ public class MessageGateway implements Gateway {
 	
 	public MessageGateway() {
 
-		InputStream inputStream;
-		Properties properties = new Properties();
 		int threadCount = 1;
 		int queueSize = 100;
 		
 		try {
-			inputStream = getClass().getClassLoader().getResourceAsStream("default.properties");
+			InputStream inputStream = getClass().getClassLoader().getResourceAsStream("default.properties");
+			Properties properties = new Properties();
 			properties.load(inputStream);
 			inputStream.close();
 			threadCount = Integer.parseInt(properties.getProperty("gateway.threads"));
@@ -63,7 +62,7 @@ public class MessageGateway implements Gateway {
 		// Abstractions for queueing and running tasks in threads.
 		blockingQueue = new PriorityBlockingQueue<Runnable>(queueSize, this.comparator);
         executor = new ThreadPoolExecutor(threadCount, threadCount, 5000,
-        		TimeUnit.MILLISECONDS, blockingQueue);
+        									TimeUnit.MILLISECONDS, blockingQueue);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("The gateway has " + threadCount + " threads and queue size " + queueSize);
@@ -85,7 +84,7 @@ public class MessageGateway implements Gateway {
 		Runnable runner = new MessageCallback(new QuoteService(message.getPayload()), message);
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug("Sending symbol " + message.getPayload() + " ...");
+			logger.debug("Processing symbol " + message.getPayload() + " ...");
 		}
 		
 		executor.execute(runner);
