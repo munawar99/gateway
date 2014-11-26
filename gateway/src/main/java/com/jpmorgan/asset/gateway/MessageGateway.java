@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -23,7 +22,7 @@ public class MessageGateway implements Gateway {
 	private Comparator comparator = new MessageComparator();
 	private PriorityBlockingQueue<Runnable> blockingQueue;
 	private ThreadPoolExecutor executor;
-	private List<String> groupReceivedSequenceList = new ArrayList<String>();
+	private ArrayList<String> groupReceivedSequenceList = new ArrayList<String>();
 	private AtomicInteger atomicInteger = new AtomicInteger();
 	
 	public MessageGateway() {
@@ -51,10 +50,10 @@ public class MessageGateway implements Gateway {
 		// Abstractions for queueing and running tasks in threads.
 		blockingQueue = new PriorityBlockingQueue<Runnable>(queueSize, this.comparator);
         executor = new ThreadPoolExecutor(threadCount, threadCount, 5000,
-        									TimeUnit.MILLISECONDS, blockingQueue);
+        									TimeUnit.MILLISECONDS, this.blockingQueue);
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug("The gateway has " + threadCount + " threads and queue size " + queueSize);
+			logger.debug("The gateway has " + threadCount + " threads and squeue size " + queueSize);
 		}
 	}
 	
@@ -79,4 +78,8 @@ public class MessageGateway implements Gateway {
 		executor.execute(runner);
 	}
 	
+	public void shutdown() {
+		this.executor.shutdown();
+	}
+
 }

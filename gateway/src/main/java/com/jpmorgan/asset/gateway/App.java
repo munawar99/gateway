@@ -58,6 +58,8 @@ public class App {
 			message.setPayload("EXIM");
 			logger.info("Sending group 2 message EXIM ...");
 			gateway.send(message);
+			
+			gateway.shutdown();
 		} catch (Exception e) {
 			String msg = "A problem occurred. Ask the helpdesk for support. ";
 			System.out.println(msg);

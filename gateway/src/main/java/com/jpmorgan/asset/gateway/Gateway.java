@@ -6,5 +6,7 @@ public interface Gateway {
 	 * Send a service reguest.
 	 */
 	void send(Message msg);
+	
+	void shutdown();
 
 }
